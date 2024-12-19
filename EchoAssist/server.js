@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> 6656ddb (updated files)
 const fs = require('fs');
 const https = require('https')
 const express = require('express');
@@ -26,7 +23,7 @@ const io = socketio(expressServer,{
         methods: ["GET", "POST"]
     }
 });
-expressServer.listen(8181);
+expressServer.listen(5000);
 
 //offers will contain {}
 const offers = [
@@ -101,74 +98,71 @@ io.on('connection',(socket)=>{
         socket.to(socketIdToAnswer).emit('answerResponse',offerToUpdate)
     })
 
-    socket.on('sendIceCandidateToSignalingServer',iceCandidateObj=>{
+    socket.on('sendIceCandidateToSignalingServer', iceCandidateObj => {
         const { didIOffer, iceUserName, iceCandidate } = iceCandidateObj;
-        // console.log(iceCandidate);
-        if(didIOffer){
-            //this ice is coming from the offerer. Send to the answerer
-            const offerInOffers = offers.find(o=>o.offererUserName === iceUserName);
-            if(offerInOffers){
-                offerInOffers.offerIceCandidates.push(iceCandidate)
-                // 1. When the answerer answers, all existing ice candidates are sent
-                // 2. Any candidates that come in after the offer has been answered, will be passed through
-                if(offerInOffers.answererUserName){
-                    //pass it through to the other socket
-                    const socketToSendTo = connectedSockets.find(s=>s.userName === offerInOffers.answererUserName);
-                    if(socketToSendTo){
-                        socket.to(socketToSendTo.socketId).emit('receivedIceCandidateFromServer',iceCandidate)
-                    }else{
-                        console.log("Ice candidate recieved but could not find answere")
+        if (didIOffer) {
+            const offerInOffers = offers.find(o => o.offererUserName === iceUserName);
+            if (offerInOffers) {
+                offerInOffers.offerIceCandidates.push(iceCandidate);
+                if (offerInOffers.answererUserName) {
+                    const socketToSendTo = connectedSockets.find(s => s.userName === offerInOffers.answererUserName);
+                    if (socketToSendTo) {
+                        socket.to(socketToSendTo.socketId).emit('receivedIceCandidateFromServer', iceCandidate);
                     }
                 }
             }
-        }else{
-            //this ice is coming from the answerer. Send to the offerer
-            //pass it through to the other socket
-            const offerInOffers = offers.find(o=>o.answererUserName === iceUserName);
-            const socketToSendTo = connectedSockets.find(s=>s.userName === offerInOffers.offererUserName);
-            if(socketToSendTo){
-                socket.to(socketToSendTo.socketId).emit('receivedIceCandidateFromServer',iceCandidate)
-            }else{
-                console.log("Ice candidate recieved but could not find offerer")
+        } else {
+            const offerInOffers = offers.find(o => o.answererUserName === iceUserName);
+            const socketToSendTo = connectedSockets.find(s => s.userName === offerInOffers.offererUserName);
+            if (socketToSendTo) {
+                socket.to(socketToSendTo.socketId).emit('receivedIceCandidateFromServer', iceCandidate);
             }
         }
-        // console.log(offers)
     });
     
-<<<<<<< HEAD
-=======
+
+
+
+
+
 
     socket.on('hangup', ({ userName }) => {
-        console.log(`${userName} has hung up`);
+        console.log("${userName} has hung up");
         // Notify other participants
         socket.broadcast.emit('callEnded', { userName });
 
         const index = offers.findIndex(o => o.offererUserName === userName || o.answererUserName == userName);
          if (index !== -1) {
             offers.splice(index, 1);
-            console.log(`Offer related to ${userName} removed`);
+            console.log("Offer related to ${userName} removed");
          }
        });
+
+
+
+
+
+
+
     
->>>>>>> 6656ddb (updated files)
     socket.on('speechTosymbol', (data) => {
         console.log(`Received speech-to-symbol data from ${socket.id}:`, data);
         socket.broadcast.emit('updateSpeechToSymbol',data);
     });
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 6656ddb (updated files)
     socket.on('startScreenShare', (data) => {                                                       
         // Emit the screen stream to all other users
-        socket.broadcast.emit('receivedScreenShareStream', data);
+        socket.broadcast.emit('receivedMyScreenShareStream', data);
     });
     
     socket.on('stopScreenShare', () => {
         // Notify others that screen sharing has stopped
-        socket.broadcast.emit('screenShareStopped');
+        socket.broadcast.emit('MyscreenShareStopped');
     });
+    
+    
+
+
+
     
     
 

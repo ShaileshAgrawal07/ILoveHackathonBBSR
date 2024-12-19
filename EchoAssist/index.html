@@ -7,12 +7,50 @@
     <title>Meeting App with Speech to Symbol Feature</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --bg-color-light: #ffffff;
+            --text-color-light: #000000;
+            --bg-color-dark: #121212;
+            --text-color-dark: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            font-family: 'Roboto', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .mode-toggle:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
+    <button id="modeToggle" class="mode-toggle">Switch to Dark Mode</button>
     <div class="container">
         <h1>Meeting App with Speech to Symbol Feature</h1>
-
+        
         <!-- Meeting Section -->
         <div class="meeting-section">
             <h2>Meeting Section</h2>
@@ -20,9 +58,7 @@
             <div class="container">
                 <div class="row mb-3 mt-3 justify-content-md-center">
                     <div id="user-name"></div>
-                    <a href="https://thakur-g72gurvetcsnspmtfcnwve.streamlit.app/" target="_blank">
-                        <button id="translation-tool" class="btn btn-secondary col-2">Translation Tool</button>
-                    </a>
+
                     <button id="call" class="btn btn-primary col-1">Call!</button>
                     <button id="hangup" class="btn btn-primary col-1">Hangup</button>
                     <button id="startScreenShare" class="btn btn-success col-1">Share Screen</button>
@@ -43,10 +79,7 @@
             </div>
         </div>
         <!-- End of Meeting Section -->
-<<<<<<< HEAD
 
-=======
->>>>>>> 6656ddb (updated files)
         <!-- Speech to Symbol Feature -->
         <div id="speechToSymbol" class="speech-tool">
             <h1>EchoAssist</h1>
@@ -90,13 +123,6 @@
             <div class="result-container" id="resultSymbolTot">&nbsp;</div>
         </div>
 
-<<<<<<< HEAD
-        <div id="live-updates">
-            <h3>Live Updates From Others</h3>
-            <div id="remoteText"></div>
-            <div id="remoteSymbols"></div>
-            </div>
-=======
         <!-- Additional Translator -->
         <div id="additionalTranslator" class="speech-tool">
             <h1>Additional Translator</h1>
@@ -108,9 +134,6 @@
                 style="border: 1px solid #ddd;" 
                 title="Additional Translator"></iframe>
         </div>
-        <!-- End of Additional Translator -->
->>>>>>> 6656ddb (updated files)
-        </div>
     </div>
 
     <!-- Scripts for functionality -->
@@ -118,10 +141,19 @@
     <script src="scripts.js"></script>
     <script src="socketListeners.js"></script>
     <script src="speechToSymbol.js"></script>
+    <script>
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                modeToggle.textContent = 'Switch to Light Mode';
+            } else {
+                modeToggle.textContent = 'Switch to Dark Mode';
+            }
+        });
+    </script>
 </body>
 
 </html>
-<<<<<<< HEAD
-=======
-q
->>>>>>> 6656ddb (updated files)

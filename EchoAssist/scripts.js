@@ -3,16 +3,24 @@ const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
 //if trying it on a phone, use this instead...
-const socket = io.connect('https://192.168.43.94:8181/',{
-// const socket = io.connect('https://localhost:8181/',{
-    auth: {
-        userName,password
-    }
-})
+const socket = io.connect('https://192.168.235.118:5000/',{
+    // const socket = io.connect('https://localhost:8181/',{
+        auth: {
+            userName,password
+        }
+    })
 
 const localVideoEl = document.querySelector('#local-video');
 const remoteVideoEl = document.querySelector('#remote-video');
 const screenShareVideo = document.getElementById('screen-share-video');
+const stopScreenShareBtn = document.getElementById('stopScreenShare');
+const startScreenShareBtn = document.getElementById('startScreenShare');
+
+
+
+
+
+
 let localStream; //a var to hold the local video stream
 let remoteStream; //a var to hold the remote video stream
 let peerConnection; //the peerConnection that the two clients use to talk
@@ -30,44 +38,25 @@ let peerConfiguration = {
 }
 
 //when a client initiates a call
-<<<<<<< HEAD
-const call = async e=>{
-    await fetchUserMedia();
-
-    //peerConnection is all set with our STUN servers sent over
-    await createPeerConnection();
-
-    //create offer time!
-    try{
-=======
 const call = async (e) =>{
     try{
     await fetchUserMedia();
     //peerConnection is all set with our STUN servers sent over
     await createPeerConnection();
     //create offer time!
->>>>>>> 6656ddb (updated files)
         console.log("Creating offer...")
         const offer = await peerConnection.createOffer();
         console.log(offer);
         peerConnection.setLocalDescription(offer);
         didIOffer = true;
-<<<<<<< HEAD
-        socket.emit('newOffer',offer); //send offer to signalingServer
-=======
         socket.emit('newOffer',offer);
         
         updateUIOnCallStart();
->>>>>>> 6656ddb (updated files)
     }catch(err){
         console.log(err)
     }
 
-<<<<<<< HEAD
-}
-=======
 };
->>>>>>> 6656ddb (updated files)
 
 const answerOffer = async(offerObj)=>{
     await fetchUserMedia()
@@ -114,6 +103,8 @@ const fetchUserMedia = ()=>{
         }
     })
 }
+
+
 
 const createPeerConnection = (offerObj)=>{
     return new Promise(async(resolve, reject)=>{
@@ -172,18 +163,27 @@ const addNewIceCandidate = iceCandidate=>{
     console.log("======Added Ice Candidate======")
 }
 
-<<<<<<< HEAD
-=======
+
+
+
+
 const resetUI = () => {
-    document.getElementById('call').disabled=false;
-    document.getElementById('hangup').disabled=true;
+    document.getElementById('call').disabled = false;
+    document.getElementById('hangup').disabled = true;
+    startScreenShareBtn.disabled = false;
+    stopScreenShareBtn.disabled = true;
 
     localVideoEl.srcObject = null;
     remoteVideoEl.srcObject = null;
+    screenShareVideo.srcObject = null;
 };
+
 
 const hangupCall = () => {
     console.log("Hangup button clicked");
+
+    // Stop the screen share if it's active
+    stopScreenShare();  // This ensures screen sharing stops
 
     // Close the peer connection
     if (peerConnection) {
@@ -216,6 +216,38 @@ const hangupCall = () => {
     resetUI();
 };
 
+
+
+
+function stopScreenShare() {
+    const stream = screenShareVideo.srcObject;
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        screenShareVideo.srcObject = null;
+        console.log('Screen sharing stopped');
+    }
+
+    // Replace the video track with the local stream's video track
+    const videoTrack = localStream.getVideoTracks()[0];
+    const videoSender = peerConnection.getSenders().find(sender => sender.track.kind === 'video');
+    if (videoSender) {
+        videoSender.replaceTrack(videoTrack);
+    }
+
+    // Emit an event to notify others that the screen sharing has stopped
+    socket.emit('stopScreenShare');
+
+    // Update UI
+    stopScreenShareBtn.disabled = true;
+    startScreenShareBtn.disabled = false;
+}
+
+
+
+
+
+
+
 document.querySelector('#call').addEventListener('click',call)
 // Add event listener for the hang-up button
 document.getElementById('hangup').addEventListener('click', hangupCall);
@@ -229,11 +261,19 @@ const updateUIOnCallStart = () => {
 
 
 socket.on('callEnded', (data) => {
-    console.log(`${data.userName} has ended the call`);
-    resetUI();
+    console.log("${data.userName} has ended the call");
+    resetUI();
 });
 
->>>>>>> 6656ddb (updated files)
+
+
+
+
+
+
+
+
+
 // Function to start screen sharing
 async function startScreenShare() {
     try {
@@ -249,7 +289,7 @@ async function startScreenShare() {
         }
 
         // Notify other users that this user is sharing their screen
-        socket.emit('startScreenShare', { streamId: sscreenStream.id });
+        socket.emit('startScreenShare', { streamId: screenStream.id });
 
         screenShareVideo.srcObject = screenStream;
 
@@ -292,10 +332,7 @@ function stopScreenShare() {
 document.getElementById('startScreenShare').addEventListener('click', startScreenShare);
 document.getElementById('stopScreenShare').addEventListener('click', stopScreenShare);
 
-<<<<<<< HEAD
 document.querySelector('#call').addEventListener('click',call)
-=======
->>>>>>> 6656ddb (updated files)
 
 
 
