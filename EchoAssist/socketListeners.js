@@ -44,6 +44,21 @@ function createOfferEls(offers){
     })
 }
 
+<<<<<<< HEAD
+=======
+
+socket.on('callEnded', (data) => {
+    console.log(`${data.userName} has ended the call`);
+
+    // Clear remote video
+    remoteVideoEl.srcObject = null;
+
+    // Update UI
+    document.getElementById('call').disabled = false; // Enable Call button
+    document.getElementById('hangup').disabled = true; // Disable Hangup button
+});
+
+>>>>>>> 6656ddb (updated files)
 socket.on('receivedScreenShareStream', (data) => {
     // Handle receiving screen share stream
     screenShareVideo.srcObject = data.streamId;

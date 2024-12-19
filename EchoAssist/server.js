@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6656ddb (updated files)
 const fs = require('fs');
 const https = require('https')
 const express = require('express');
@@ -132,10 +135,31 @@ io.on('connection',(socket)=>{
         // console.log(offers)
     });
     
+<<<<<<< HEAD
+=======
+
+    socket.on('hangup', ({ userName }) => {
+        console.log(`${userName} has hung up`);
+        // Notify other participants
+        socket.broadcast.emit('callEnded', { userName });
+
+        const index = offers.findIndex(o => o.offererUserName === userName || o.answererUserName == userName);
+         if (index !== -1) {
+            offers.splice(index, 1);
+            console.log(`Offer related to ${userName} removed`);
+         }
+       });
+    
+>>>>>>> 6656ddb (updated files)
     socket.on('speechTosymbol', (data) => {
         console.log(`Received speech-to-symbol data from ${socket.id}:`, data);
         socket.broadcast.emit('updateSpeechToSymbol',data);
     });
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 6656ddb (updated files)
     socket.on('startScreenShare', (data) => {                                                       
         // Emit the screen stream to all other users
         socket.broadcast.emit('receivedScreenShareStream', data);

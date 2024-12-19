@@ -30,6 +30,7 @@ let peerConfiguration = {
 }
 
 //when a client initiates a call
+<<<<<<< HEAD
 const call = async e=>{
     await fetchUserMedia();
 
@@ -38,17 +39,35 @@ const call = async e=>{
 
     //create offer time!
     try{
+=======
+const call = async (e) =>{
+    try{
+    await fetchUserMedia();
+    //peerConnection is all set with our STUN servers sent over
+    await createPeerConnection();
+    //create offer time!
+>>>>>>> 6656ddb (updated files)
         console.log("Creating offer...")
         const offer = await peerConnection.createOffer();
         console.log(offer);
         peerConnection.setLocalDescription(offer);
         didIOffer = true;
+<<<<<<< HEAD
         socket.emit('newOffer',offer); //send offer to signalingServer
+=======
+        socket.emit('newOffer',offer);
+        
+        updateUIOnCallStart();
+>>>>>>> 6656ddb (updated files)
     }catch(err){
         console.log(err)
     }
 
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> 6656ddb (updated files)
 
 const answerOffer = async(offerObj)=>{
     await fetchUserMedia()
@@ -153,6 +172,68 @@ const addNewIceCandidate = iceCandidate=>{
     console.log("======Added Ice Candidate======")
 }
 
+<<<<<<< HEAD
+=======
+const resetUI = () => {
+    document.getElementById('call').disabled=false;
+    document.getElementById('hangup').disabled=true;
+
+    localVideoEl.srcObject = null;
+    remoteVideoEl.srcObject = null;
+};
+
+const hangupCall = () => {
+    console.log("Hangup button clicked");
+
+    // Close the peer connection
+    if (peerConnection) {
+        peerConnection.close();
+        peerConnection = null;
+        console.log("PeerConnection closed");
+    }
+
+    // Stop local media tracks
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+        console.log("Local stream tracks stopped");
+    }
+
+    // Stop remote media tracks
+    if (remoteStream) {
+        remoteStream.getTracks().forEach(track => track.stop());
+        remoteStream = null;
+        console.log("Remote stream tracks stopped");
+    }
+
+    // Clear video elements
+    localVideoEl.srcObject = null;
+    remoteVideoEl.srcObject = null;
+
+    // Notify the server
+    socket.emit('hangup', { userName });
+
+    resetUI();
+};
+
+document.querySelector('#call').addEventListener('click',call)
+// Add event listener for the hang-up button
+document.getElementById('hangup').addEventListener('click', hangupCall);
+
+document.getElementById('hangup').disabled = true;
+
+const updateUIOnCallStart = () => {
+    document.getElementById('call').disabled = true;
+    document.getElementById('hangup').disabled = false;
+};
+
+
+socket.on('callEnded', (data) => {
+    console.log(`${data.userName} has ended the call`);
+    resetUI();
+});
+
+>>>>>>> 6656ddb (updated files)
 // Function to start screen sharing
 async function startScreenShare() {
     try {
@@ -211,7 +292,10 @@ function stopScreenShare() {
 document.getElementById('startScreenShare').addEventListener('click', startScreenShare);
 document.getElementById('stopScreenShare').addEventListener('click', stopScreenShare);
 
+<<<<<<< HEAD
 document.querySelector('#call').addEventListener('click',call)
+=======
+>>>>>>> 6656ddb (updated files)
 
 
 
