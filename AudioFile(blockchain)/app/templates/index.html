@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+  body {
+    transition: background-color 0.5s, color 0.5s;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .dark-mode {
+    background-color: #1e1e2f !important;
+    color: #f5f5f5 !important;
+  }
+
+  .light-mode {
+    background-color: #f8f9fa !important;
+    color: #343a40 !important;
+  }
+
+  .btn-toggle {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .btn-toggle:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+  }
+
+  .container-fluid {
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .alert-primary {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  .form-control {
+    font-size: 1.2rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #0069d9;
+    color: #fff;
+  }
+
+  .post_box {
+    background: linear-gradient(145deg, #e0f7fa, #b2ebf2);
+    border-radius: 0.8rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .post_box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .post_box-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-right: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .post_box-header {
+    display: flex;
+    align-items: center;
+  }
+
+  .post_box-body {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+  }
+
+  .name-header {
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+</style>
+
+<button class="btn-toggle" id="toggleMode">Toggle Mode</button>
+
+<div class="container-fluid light-mode" id="mainContainer">
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="card">
+        <h2 class="text-center alert alert-primary">Upload a File</h2>
+        <form action="/submit" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label>User Name:</label>
+            <input type="text" class="form-control" name="user" placeholder="Enter Your Name" />
+          </div>
+
+          <div class="form-group">
+            <label>Upload a File:</label>
+            <input type="file" id="fileUpld" name="v_file" accept=".*" />
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-sm-7">
+      <div class="card">
+        <h2 class="text-center alert alert-primary">Uploaded Files</h2>
+        {% for post in request_tx %}
+        <div class="post_box">
+          <div class="post_box-header">
+            <div class="post_box-avatar">{{post.user[0]}}</div>
+            <div class="name-header">{{post.user}}</div>
+          </div>
+          <div class="post_box-body">
+            <p>
+              {{post.v_file}} &#x2192
+              <a href="{{url_for('download_file', variable=post.v_file)}}">Download</a>
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const toggleButton = document.getElementById('toggleMode');
+  const mainContainer = document.getElementById('mainContainer');
+
+  toggleButton.addEventListener('click', () => {
+    if (mainContainer.classList.contains('light-mode')) {
+      mainContainer.classList.replace('light-mode', 'dark-mode');
+    } else {
+      mainContainer.classList.replace('dark-mode', 'light-mode');
+    }
+  });
+</script>
+
+{% endblock %}
